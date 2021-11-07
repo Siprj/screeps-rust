@@ -36,7 +36,7 @@ pub fn main() {
     log(blakwa());
     kwa2("asdf".to_string());
 
-    for k in &Game::spawns()).iter() {
+    for k in &Game::spawns().iter() {
         log(k);
     }
 //    log_keys(Game::creeps())

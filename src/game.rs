@@ -8,22 +8,27 @@ struct ScreepObject<K, V> {
     phantom_value: PhantomData<V>,
 }
 
-impl ScreepObject<K, V> {
-    fn map(self, f: Fn<&V>) {
+struct ScreepValue<V> {
+    object: Object,
+    phantom_value: PhantomData<V>,
+}
+
+impl<K, V> ScreepObject<K, V> {
+    fn map(self, f: Box<dyn FnMut(ScreepValue<V>)>) {
         let f_wraped = |object: JsValue| {
-            ScreepObject {
-                object,
-                phantom_key: PhantomData::default(),
+            let v = ScreepValue {
+                object: object.into(),
                 phantom_value: PhantomData::default(),
-            }
+            };
+            f(v);
         };
-        obj_map(self.object, f_wraped);
+        obj_map(&self.object.into(), &Closure::wrap(Box::new(f_wraped)));
     }
 }
 
 #[wasm_bindgen(module = "utils")]
 extern "C" {
-    fn obj_map(obj: &JsValue, f: Fn<&JsValue>);
+    fn obj_map(obj: &JsValue, f: &Closure<dyn FnMut(JsValue)>);
 }
 
 // ScreepObjectIterator<K, V> {
