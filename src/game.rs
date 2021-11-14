@@ -1,8 +1,7 @@
-use wasm_bindgen::prelude::*;
-use std::marker::PhantomData;
-use num_derive::FromPrimitive;
-use num_traits::FromPrimitive;
+use crate::api::return_code::ReturnCode;
 use js_sys::{Array, JsString, Object};
+use std::marker::PhantomData;
+use wasm_bindgen::prelude::*;
 
 pub struct ScreepHashMap<K, V> {
     pub object: Object,
@@ -100,109 +99,81 @@ pub mod mem {
     use wasm_bindgen::JsValue;
 
     pub fn get_string(target: &JsValue, key: &str) -> Option<JsString> {
-        js_sys::Reflect::get(target, &JsValue::from_str(key)).map(|v| v.into()).ok()
+        js_sys::Reflect::get(target, &JsValue::from_str(key))
+            .map(|v| v.into())
+            .ok()
     }
     pub fn get_bool(target: &JsValue, key: &str) -> Option<bool> {
-        js_sys::Reflect::get(target, &JsValue::from_str(key)).ok().map(|v| v.as_bool()).flatten()
+        js_sys::Reflect::get(target, &JsValue::from_str(key))
+            .ok()
+            .map(|v| v.as_bool())
+            .flatten()
     }
     pub fn get_u32(target: &JsValue, key: &str) -> Option<u32> {
-        js_sys::Reflect::get(target, &JsValue::from_str(key)).ok().map(|v| v.as_f64().map(|vv| vv as u32)).flatten()
+        js_sys::Reflect::get(target, &JsValue::from_str(key))
+            .ok()
+            .map(|v| v.as_f64().map(|vv| vv as u32))
+            .flatten()
     }
     pub fn get_u32_with_u32(target: &JsValue, key: u32) -> Option<u32> {
-        js_sys::Reflect::get_u32(target, key).ok().map(|v| v.as_f64().map(|vv| vv as u32)).flatten()
+        js_sys::Reflect::get_u32(target, key)
+            .ok()
+            .map(|v| v.as_f64().map(|vv| vv as u32))
+            .flatten()
     }
 
-    pub fn set_string(tarset: &JsValue, key: &str, value: Option<JsString>) {
+    pub fn set_string(target: &JsValue, key: &str, value: Option<JsString>) {
         match value {
             Some(v) => {
-                js_sys::Reflect::set(tarset, &JsValue::from_str(key), &v);
-            },
+                js_sys::Reflect::set(target, &JsValue::from_str(key), &v).unwrap();
+            }
             None => {
-                js_sys::Reflect::set(tarset, &JsValue::from_str(key), &JsValue::NULL);
-            },
+                js_sys::Reflect::set(target, &JsValue::from_str(key), &JsValue::NULL).unwrap();
+            }
         }
     }
-    pub fn set_bool(tarset: &JsValue, key: &str, value: Option<bool>) {
+    pub fn set_bool(target: &JsValue, key: &str, value: Option<bool>) {
         match value {
             Some(v) => {
-                js_sys::Reflect::set(tarset, &JsValue::from_str(key), &JsValue::from_bool(v));
-            },
+                js_sys::Reflect::set(target, &JsValue::from_str(key), &JsValue::from_bool(v))
+                    .unwrap();
+            }
             None => {
-                js_sys::Reflect::set(tarset, &JsValue::from_str(key), &JsValue::NULL);
-            },
+                js_sys::Reflect::set(target, &JsValue::from_str(key), &JsValue::NULL).unwrap();
+            }
         }
     }
-    pub fn set_u32(tarset: &JsValue, key: &str, value: Option<u32>) {
+    pub fn set_u32(target: &JsValue, key: &str, value: Option<u32>) {
         match value {
             Some(v) => {
-                js_sys::Reflect::set(tarset, &JsValue::from_str(key), &JsValue::from_f64(v as f64));
-            },
+                js_sys::Reflect::set(
+                    target,
+                    &JsValue::from_str(key),
+                    &JsValue::from_f64(v as f64),
+                )
+                .unwrap();
+            }
             None => {
-                js_sys::Reflect::set(tarset, &JsValue::from_str(key), &JsValue::NULL);
-            },
+                js_sys::Reflect::set(target, &JsValue::from_str(key), &JsValue::NULL).unwrap();
+            }
         }
     }
-    pub fn set_u32_with_u32(tarset: &JsValue, key: u32, value: Option<u32>) {
+    pub fn set_u32_with_u32(target: &JsValue, key: u32, value: Option<u32>) {
         match value {
             Some(v) => {
-                js_sys::Reflect::set_u32(tarset, key, &JsValue::from_f64(v as f64));
-            },
+                js_sys::Reflect::set_u32(target, key, &JsValue::from_f64(v as f64)).unwrap();
+            }
             None => {
-                js_sys::Reflect::set_u32(tarset, key, &JsValue::NULL);
-            },
+                js_sys::Reflect::set_u32(target, key, &JsValue::NULL).unwrap();
+            }
         }
     }
 }
-
 
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen]
     pub type Structure;
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, FromPrimitive)]
-#[repr(i8)]
-pub enum ReturnCode {
-    Ok = 0,
-    NotOwner = -1,
-    NoPath = -2,
-    NameExists = -3,
-    Busy = -4,
-    NotFound = -5,
-    NotEnough = -6,
-    InvalidTarget = -7,
-    Full = -8,
-    NotInRange = -9,
-    InvalidArgs = -10,
-    Tired = -11,
-    NoBodypart = -12,
-    RclNotEnough = -14,
-    GclNotEnough = -15,
-}
-
-impl wasm_bindgen::convert::IntoWasmAbi for ReturnCode {
-    type Abi = i32;
-
-    #[inline]
-    fn into_abi(self) -> Self::Abi {
-        (self as i32).into_abi()
-    }
-}
-
-impl wasm_bindgen::convert::FromWasmAbi for ReturnCode {
-    type Abi = i32;
-
-    #[inline]
-    unsafe fn from_abi(js: i32) -> Self {
-        Self::from_i32(js).unwrap()
-    }
-}
-
-impl wasm_bindgen::describe::WasmDescribe for ReturnCode {
-    fn describe() {
-        wasm_bindgen::describe::inform(wasm_bindgen::describe::I32)
-    }
 }
 
 // impl TryFrom<JsValue> for ReturnCode {
@@ -212,7 +183,6 @@ impl wasm_bindgen::describe::WasmDescribe for ReturnCode {
 //         value.as_f64().and_then(|f| Self::from_i32(f as i32)).ok_or_else(|| "expected number for return code".to_owned())
 //     }
 // }
-
 
 #[wasm_bindgen]
 extern "C" {
@@ -283,7 +253,12 @@ extern "C" {
     pub fn spawning(this: &Spawn) -> Option<Spawning>;
 
     #[wasm_bindgen(method, js_name = spawnCreep)]
-    pub fn spawn_creep(this: &Spawn, body: &Array, name: &str, options: Option<&Object>) -> ReturnCode;
+    pub fn spawn_creep(
+        this: &Spawn,
+        body: &Array,
+        name: &str,
+        options: Option<&Object>,
+    ) -> ReturnCode;
 
     #[wasm_bindgen(method, getter = store)]
     pub fn store(this: &Spawn) -> Store;
@@ -314,5 +289,4 @@ pub fn creeps() -> ScreepHashMap<JsString, Spawn> {
         phantom_key: PhantomData::default(),
         phantom_value: PhantomData::default(),
     }
-
 }

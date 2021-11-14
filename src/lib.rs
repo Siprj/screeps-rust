@@ -1,11 +1,13 @@
+#![feature(exact_size_is_empty)]
 extern crate wee_alloc;
+pub mod api;
 mod console;
 mod game;
 
+use api::return_code::*;
 use game::*;
 use js_sys::{Array, Object};
 use wasm_bindgen::{JsCast, JsValue};
-
 
 // Use `wee_alloc` as the global allocator.
 #[global_allocator]
@@ -31,7 +33,6 @@ pub fn main() {
                 body.push(&JsValue::from_str("carry"));
                 body.push(&JsValue::from_str("work"));
 
-
                 spawn.spawn_creep(&body, &format!("harvester-{}", Game::time()), None);
             }
         }
@@ -46,7 +47,7 @@ pub fn main() {
                 if creep.store().get_free_capacity(&resource_energy()) == 0 {
                     mem::set_bool(&creep_memory, "harvesting", Some(false));
                 }
-            },
+            }
             _ => {
                 if creep.store().get_used_capacity(&resource_energy()) == 0 {
                     mem::set_bool(&creep_memory, "harvesting", Some(true));
@@ -55,19 +56,14 @@ pub fn main() {
         }
 
         if mem::get_bool(&creep_memory, "harvesting").unwrap() {
-            let source = &creep
-                .room()
-                .find(FIND_SOURCES_ACTIVE).to_vec()[0];
+            let source = &creep.room().find(FIND_SOURCES_ACTIVE).to_vec()[0];
             if creep.pos().is_near_to(source) {
                 creep.harvest(source);
             } else {
                 creep.move_to(source);
             }
         } else {
-            if let Some(c) = creep
-                .room()
-                .controller()
-            {
+            if let Some(c) = creep.room().controller() {
                 let r = creep.upgrade_controller(&c);
                 if r == ReturnCode::NotInRange {
                     creep.move_to(&c);
