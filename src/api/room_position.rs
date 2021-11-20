@@ -13,7 +13,7 @@ extern "C" {
     /// [RoomPosition](https://docs.screeps.com/api/#RoomPosition)
     ///
     /// Contains `X`, `Y` postion in the room with `roomName`
-    #[wasm_bindgen]
+    #[wasm_bindgen(js_name = RoomPosition)]
     pub type RoomPosition;
 
     #[wasm_bindgen(constructor)]
@@ -70,5 +70,17 @@ extern "C" {
     ///   * InvalidArgs - The location is invalid.
     #[wasm_bindgen(method, js_name = findClosestByPath)]
     pub fn find_closest_objects_by_path(this: &RoomPosition, objects: FindType) -> Option<Object>;
+
+    // TODO:
+    //  * findClosestByRange
+    //  * findInRange
+    //  * findPathTo
+    //  * getDirectionTo
+    //  * getRangeTo
+    //  * inRangeTo
+    //  * isEqualTo
+    //  * isNearTo
+    //  * look
+    //  * lookFor
 
 }

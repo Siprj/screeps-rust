@@ -1,5 +1,7 @@
 use wasm_bindgen::convert::{FromWasmAbi, IntoWasmAbi};
 
+pub mod spawn;
+
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum StructureType {
     Spawn,

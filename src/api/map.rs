@@ -13,11 +13,11 @@ pub struct ScreepsMap<K, T>
 }
 
 impl<K, T> ScreepsMap<K, T> {
-    fn get(&self, key: K) -> T where K: ScreepsToJsKey, T: ScreepsFromJsValue {
+    pub fn get(&self, key: K) -> T where K: ScreepsToJsKey, T: ScreepsFromJsValue {
         T::from_js_value(Reflect::get(&self.map, &key.to_js_key()).unwrap())
     }
 
-    fn values_ref(&self) -> ScreepsArray<K> {
+    pub fn values_ref(&self) -> ScreepsArray<T> {
         ScreepsArray{
             array: Object::values(Object::unchecked_from_js_ref(&self.map)),
             phantom_type: PhantomData::default()
