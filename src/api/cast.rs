@@ -12,11 +12,11 @@ impl ScreepsFromJsValue for JsValue {
 }
 
 pub trait ScreepsToJsValue {
-    fn to_js_value(&self) -> JsValue;
+    fn to_js_value(&self) -> &JsValue;
 }
 
 impl ScreepsToJsValue for JsValue {
-    fn to_js_value(&self) -> JsValue {
+    fn to_js_value(&self) -> &JsValue {
         self.into()
     }
 }

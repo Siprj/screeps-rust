@@ -30,7 +30,7 @@ impl ScreepsFromJsValue for Effect {
 }
 
 impl ScreepsToJsValue for Effect {
-    fn to_js_value(&self) -> JsValue {
-        self.into()
+    fn to_js_value(&self) -> &JsValue {
+        self.unchecked_ref()
     }
 }

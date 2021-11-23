@@ -43,7 +43,7 @@ impl ScreepsFromJsValue for Room {
 }
 
 impl ScreepsToJsValue for Room {
-    fn to_js_value(&self) -> JsValue {
-        self.into()
+    fn to_js_value(&self) -> &JsValue {
+        self.unchecked_ref()
     }
 }
