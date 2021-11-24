@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use wasm_bindgen::{JsCast, prelude::*};
 use crate::api::array::ScreepsArray;
 
@@ -16,22 +18,44 @@ pub enum BodyPartType {
     Claim
 }
 
+impl ToString for BodyPartType {
+    fn to_string(&self) -> String {
+        match self {
+            BodyPartType::Move => "move".to_string(),
+            BodyPartType::Work => "work".to_string(),
+            BodyPartType::Carry => "carry".to_string(),
+            BodyPartType::Attack => "attack".to_string(),
+            BodyPartType::RangedAttack => "ranged_attack".to_string(),
+            BodyPartType::Tough => "tough".to_string(),
+            BodyPartType::Heal => "heal".to_string(),
+            BodyPartType::Claim => "claim".to_string()
+        }
+    }
+}
+
+impl FromStr for BodyPartType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+             "move" => Ok(BodyPartType::Move),
+             "work" => Ok(BodyPartType::Work),
+             "carry" => Ok(BodyPartType::Carry),
+             "attack" => Ok(BodyPartType::Attack),
+             "rangedAttack" => Ok(BodyPartType::RangedAttack),
+             "tough" => Ok(BodyPartType::Tough),
+             "heal" => Ok(BodyPartType::Heal),
+             "claim" => Ok(BodyPartType::Claim),
+             v => Err(format!("unknown creep body part: {}", v))
+        }
+    }
+}
+
 impl wasm_bindgen::convert::IntoWasmAbi for BodyPartType {
     type Abi = <String as wasm_bindgen::convert::IntoWasmAbi>::Abi;
 
     #[inline]
     fn into_abi(self) -> Self::Abi {
-        let v = match self {
-            BodyPartType::Move => "move",
-            BodyPartType::Work => "work",
-            BodyPartType::Carry => "carry",
-            BodyPartType::Attack => "attack",
-            BodyPartType::RangedAttack => "ranged_attack",
-            BodyPartType::Tough => "tough",
-            BodyPartType::Heal => "heal",
-            BodyPartType::Claim => "claim"
-        };
-        v.into_abi()
+        self.to_string().into_abi()
     }
 }
 
@@ -40,17 +64,7 @@ impl wasm_bindgen::convert::FromWasmAbi for BodyPartType {
 
     #[inline]
     unsafe fn from_abi(js_str: Self::Abi) -> Self {
-        match String::from_abi(js_str).as_str() {
-             "move" => BodyPartType::Move,
-             "work" => BodyPartType::Work,
-             "carry" => BodyPartType::Carry,
-             "attack" => BodyPartType::Attack,
-             "rangedAttack" => BodyPartType::RangedAttack,
-             "tough" => BodyPartType::Tough,
-             "heal" => BodyPartType::Heal,
-             "claim" => BodyPartType::Claim,
-             v => panic!("unknown creep body part: {}", v)
-        }
+        FromStr::from_str(String::from_abi(js_str).as_str()).unwrap()
     }
 }
 
@@ -60,9 +74,21 @@ impl wasm_bindgen::describe::WasmDescribe for BodyPartType {
     }
 }
 
+impl ScreepsToJsValue for BodyPartType {
+    fn to_js_value(self) -> JsValue {
+        JsValue::from_str(&self.to_string())
+    }
+}
+
+impl ScreepsFromJsValue for BodyPartType {
+    fn from_js_value(val: JsValue) -> Self {
+        FromStr::from_str(&val.as_string().unwrap()).unwrap()
+    }
+}
+
 impl ScreepsToJsValue for BodyPart {
-    fn to_js_value(&self) -> &JsValue {
-        self.unchecked_ref()
+    fn to_js_value(self) -> JsValue {
+        self.unchecked_into()
     }
 }
 
@@ -161,7 +187,7 @@ impl ScreepsFromJsValue for Creep {
 }
 
 impl ScreepsToJsValue for Creep {
-    fn to_js_value(&self) -> &JsValue {
-        self.unchecked_ref()
+    fn to_js_value(self) -> JsValue {
+        self.unchecked_into()
     }
 }

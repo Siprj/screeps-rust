@@ -1,7 +1,7 @@
 use crate::api::map::ScreepsMap;
-use js_sys::Object;
 use wasm_bindgen::prelude::*;
 use super::creep::Creep;
+use super::structure::spawn::Spawn;
 
 #[wasm_bindgen]
 extern "C" {
@@ -9,7 +9,7 @@ extern "C" {
     #[wasm_bindgen(static_method_of = Game, getter = creeps)]
     fn creeps() -> ScreepsMap<String, Creep>;
     #[wasm_bindgen(static_method_of = Game, getter = spawns)]
-    fn spawns() -> Object;
+    fn spawns() -> ScreepsMap<String, Spawn>;
     #[wasm_bindgen(static_method_of = Game, getter = time)]
     pub fn time() -> u32;
 

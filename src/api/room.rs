@@ -12,10 +12,15 @@ extern "C" {
     /// [Room]](https://docs.screeps.com/api/#Room)
     pub type Room;
 
+    #[wasm_bindgen(method, getter = energyAvailable)]
+    fn energy_avalilable(this: &Room) -> u32;
+
+    #[wasm_bindgen(method, getter = energyCapacityAvailabl)]
+    fn energy_capacity(this: &Room) -> u32;
+
+
     // TODO:
     //  * controller
-    //  * energyAvailable
-    //  * energyCapacityAvailable
     //  * memory
     //  * name
     //  * storage
@@ -43,7 +48,7 @@ impl ScreepsFromJsValue for Room {
 }
 
 impl ScreepsToJsValue for Room {
-    fn to_js_value(&self) -> &JsValue {
-        self.unchecked_ref()
+    fn to_js_value(self) -> JsValue {
+        self.unchecked_into()
     }
 }
