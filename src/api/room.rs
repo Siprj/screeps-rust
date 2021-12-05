@@ -18,6 +18,8 @@ extern "C" {
     #[wasm_bindgen(method, getter = energyCapacityAvailabl)]
     fn energy_capacity(this: &Room) -> u32;
 
+    #[wasm_bindgen(method, js_name = findPath)]
+    fn find_path(this: &Room) -> u32;
 
     // TODO:
     //  * controller

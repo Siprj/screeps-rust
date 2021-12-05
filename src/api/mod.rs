@@ -12,4 +12,3 @@ pub mod creep;
 pub mod game;
 pub mod room;
 pub mod store;
-pub mod utils;

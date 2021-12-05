@@ -33,13 +33,13 @@ extern "C" {
     pub fn name(this: &Spawn) -> String;
 
     #[wasm_bindgen(method, getter = my)]
-    pub fn isMy(this: &Spawn) -> bool;
+    pub fn is_my(this: &Spawn) -> bool;
 
     #[wasm_bindgen(method, getter = store)]
     pub fn store(this: &Spawn) -> Store;
 
-    #[wasm_bindgen(method, getter = spawnCreep)]
-    pub fn spawn_creep(this: &Spawn, body: ScreepsArray<BodyPartType>) -> Store;
+    #[wasm_bindgen(method, js_name = spawnCreep)]
+    pub fn spawn_creep(this: &Spawn, body: ScreepsArray<BodyPartType>, name: &str) -> Store;
 
     // TODO:
     //  * structureType

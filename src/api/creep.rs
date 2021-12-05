@@ -128,23 +128,41 @@ extern "C" {
     #[wasm_bindgen(method, getter = room)]
     pub fn room(this: &Creep) -> Room;
 
+    #[wasm_bindgen(method, getter = hits)]
+    pub fn hitpoints(this: &Creep) -> u32;
+
+    #[wasm_bindgen(method, getter = hitsMax)]
+    pub fn hitpoints_maxiumu(this: &Creep) -> u32;
+
     /// [Creep.body](]https://docs.screeps.com/api/#Creep.body) return array
     /// of body parts. See: https://docs.screeps.com/api/#Creep for more
     /// details regardin what body part is.
     #[wasm_bindgen(method, getter = body)]
     pub fn body(this: &Creep) -> ScreepsArray<BodyPart>;
 
+    /// [Creep.fatigue](https://docs.screeps.com/api/#Creep.fatigue)
+    /// The movement fatigue indicator. If it is greater than zero, the creep
+    /// cannot move.
+    #[wasm_bindgen(method, getter = fatigue)]
+    pub fn fatigue(this: &Creep) -> u32;
+
+    #[wasm_bindgen(method, getter = id)]
+    pub fn id(this: &Creep) -> String;
+
+    #[wasm_bindgen(method, getter = my)]
+    pub fn is_my(this: &Creep) -> bool;
+
+    #[wasm_bindgen(method, getter = name)]
+    pub fn name(this: &Creep) -> String;
+
+    #[wasm_bindgen(method, js_name = moveTo)]
+    pub fn move_to_xy(this: &Creep, x: u8, y: u8) -> String;
+
+    #[wasm_bindgen(method, js_name = moveTo)]
+    pub fn move_to_pos(this: &Creep, pos: RoomPosition) -> String;
+
     // TODO:
-    //  * effects
-    //  * room
-    //  * body
-    //  * fatigue
-    //  * hits
-    //  * hitsMax
-    //  * id
     //  * memory
-    //  * my
-    //  * name
     //  * owner
     //  * saying
     //  * spawning
