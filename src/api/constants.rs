@@ -8,7 +8,7 @@ impl wasm_bindgen::convert::IntoWasmAbi for EffectOrPowerId {
     #[inline]
     fn into_abi(self) -> Self::Abi {
         match self {
-            EffectOrPowerId(v) => v.into_abi()
+            EffectOrPowerId(v) => v.into_abi(),
         }
     }
 }
@@ -300,7 +300,7 @@ impl wasm_bindgen::convert::FromWasmAbi for ResourceType {
             "spirit" => ResourceType::Spirit,
             "emanation" => ResourceType::Emanation,
             "essence" => ResourceType::Essence,
-            v => panic!("unknown creep body part: {}", v)
+            v => panic!("unknown creep body part: {}", v),
         }
     }
 }

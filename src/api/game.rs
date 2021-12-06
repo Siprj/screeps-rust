@@ -1,7 +1,7 @@
-use crate::api::map::ScreepsMap;
-use wasm_bindgen::prelude::*;
 use super::creep::Creep;
 use super::structure::spawn::Spawn;
+use crate::api::map::ScreepsMap;
+use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern "C" {

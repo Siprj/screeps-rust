@@ -1,4 +1,4 @@
-use wasm_bindgen::{JsCast, prelude::*};
+use wasm_bindgen::{prelude::*, JsCast};
 
 use crate::api::constants::EffectOrPowerId;
 

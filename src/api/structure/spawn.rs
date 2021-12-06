@@ -1,10 +1,10 @@
-use wasm_bindgen::{JsCast, prelude::*};
-use crate::api::cast::{ScreepsFromJsValue, ScreepsToJsValue};
-use crate::api::creep::BodyPartType;
-use crate::api::{array::ScreepsArray, room_position::RoomPosition};
-use crate::api::effect::Effect;
 use super::super::room::Room;
 use super::super::store::Store;
+use crate::api::cast::{ScreepsFromJsValue, ScreepsToJsValue};
+use crate::api::creep::BodyPartType;
+use crate::api::effect::Effect;
+use crate::api::{array::ScreepsArray, room_position::RoomPosition};
+use wasm_bindgen::{prelude::*, JsCast};
 
 #[wasm_bindgen]
 extern "C" {
@@ -52,7 +52,6 @@ extern "C" {
     //  * store
     //  * recycleCreep
     //  * renewCreep
-
 }
 
 impl ScreepsFromJsValue for Spawn {

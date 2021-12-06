@@ -1,11 +1,14 @@
 use std::str::FromStr;
 
-use wasm_bindgen::{JsCast, prelude::*};
 use crate::api::array::ScreepsArray;
+use wasm_bindgen::{prelude::*, JsCast};
 
-use super::{cast::{ScreepsFromJsValue, ScreepsToJsValue}, room_position::RoomPosition};
-use super::room::Room;
 use super::effect::Effect;
+use super::room::Room;
+use super::{
+    cast::{ScreepsFromJsValue, ScreepsToJsValue},
+    room_position::RoomPosition,
+};
 
 pub enum BodyPartType {
     Move,
@@ -15,7 +18,7 @@ pub enum BodyPartType {
     RangedAttack,
     Tough,
     Heal,
-    Claim
+    Claim,
 }
 
 impl ToString for BodyPartType {
@@ -28,7 +31,7 @@ impl ToString for BodyPartType {
             BodyPartType::RangedAttack => "ranged_attack".to_string(),
             BodyPartType::Tough => "tough".to_string(),
             BodyPartType::Heal => "heal".to_string(),
-            BodyPartType::Claim => "claim".to_string()
+            BodyPartType::Claim => "claim".to_string(),
         }
     }
 }
@@ -37,15 +40,15 @@ impl FromStr for BodyPartType {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-             "move" => Ok(BodyPartType::Move),
-             "work" => Ok(BodyPartType::Work),
-             "carry" => Ok(BodyPartType::Carry),
-             "attack" => Ok(BodyPartType::Attack),
-             "rangedAttack" => Ok(BodyPartType::RangedAttack),
-             "tough" => Ok(BodyPartType::Tough),
-             "heal" => Ok(BodyPartType::Heal),
-             "claim" => Ok(BodyPartType::Claim),
-             v => Err(format!("unknown creep body part: {}", v))
+            "move" => Ok(BodyPartType::Move),
+            "work" => Ok(BodyPartType::Work),
+            "carry" => Ok(BodyPartType::Carry),
+            "attack" => Ok(BodyPartType::Attack),
+            "rangedAttack" => Ok(BodyPartType::RangedAttack),
+            "tough" => Ok(BodyPartType::Tough),
+            "heal" => Ok(BodyPartType::Heal),
+            "claim" => Ok(BodyPartType::Claim),
+            v => Err(format!("unknown creep body part: {}", v)),
         }
     }
 }
@@ -112,7 +115,6 @@ extern "C" {
     pub fn hitpoints(this: &BodyPart) -> u32;
 
 }
-
 
 #[wasm_bindgen]
 extern "C" {

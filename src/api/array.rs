@@ -3,14 +3,12 @@ use std::{marker::PhantomData, ops::Range};
 use super::cast::{ScreepsFromJsValue, ScreepsToJsValue};
 use js_sys::Array;
 
-pub struct ScreepsArray<T>
-{
+pub struct ScreepsArray<T> {
     pub array: Array,
     pub phantom_type: PhantomData<T>,
 }
 
-pub struct ScreepsArrayIterator<T>
-{
+pub struct ScreepsArrayIterator<T> {
     array: Array,
     range: Range<u32>,
     phantom_type: PhantomData<T>,
