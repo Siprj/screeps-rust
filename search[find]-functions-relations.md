@@ -68,3 +68,19 @@ __Forbiden__ options when using new PathFinder (now default).
 
 The `roomCallback` is constructed using `getPathFindingGrid2` and `costCallback`
 option.
+
+## Game.map.findRoute
+
+Is written using javascript based A star, because it is not too costly to compute
+on room level.
+
+Uses only `routeCallback`.
+
+## Game.map.findExit
+
+Uses `Game.map.findRoute` under the hood, thus it uses only `routeCallback`
+option.
+
+## Creep.moveTo
+
+Uses `RoomPosition.findPathTo` function.
