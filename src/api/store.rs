@@ -7,23 +7,23 @@ use super::structure::spawn::Spawn;
 extern "C" {
     pub type Store;
 
-    #[wasm_bindgen(method, getter = getCapacity)]
-    fn capacity(this: &Store) -> u32;
+    #[wasm_bindgen(method, js_name = getCapacity)]
+    pub fn capacity(this: &Store) -> u32;
 
-    #[wasm_bindgen(method, getter = getCapacity)]
-    fn capacity_by_resource(this: &Store, resource_type: ResourceType) -> u32;
+    #[wasm_bindgen(method, js_name = getCapacity)]
+    pub fn capacity_by_resource(this: &Store, resource_type: ResourceType) -> u32;
 
-    #[wasm_bindgen(method, getter = getFreeCapacity)]
-    fn free_space(this: &Store) -> ScreepsMap<String, Spawn>;
+    #[wasm_bindgen(method, js_name = getFreeCapacity)]
+    pub fn free_space(this: &Store) -> ScreepsMap<String, Spawn>;
 
-    #[wasm_bindgen(method, getter = getFreeCapacity)]
-    fn free_space_by_resource(this: &Store, resource_type: ResourceType) -> u32;
+    #[wasm_bindgen(method, js_name = getFreeCapacity)]
+    pub fn free_space_by_resource(this: &Store, resource_type: ResourceType) -> u32;
 
-    #[wasm_bindgen(method, getter = getUsedCapacity)]
-    fn stored(this: &Store) -> u32;
+    #[wasm_bindgen(method, js_name = getUsedCapacity)]
+    pub fn stored(this: &Store) -> u32;
 
-    #[wasm_bindgen(method, getter = getUsedCapacity)]
-    fn stored_by_resource(this: &Store, resource_type: ResourceType) -> u32;
+    #[wasm_bindgen(method, js_name = getUsedCapacity)]
+    pub fn stored_by_resource(this: &Store, resource_type: ResourceType) -> u32;
 }
 
 // impl wasm_bindgen::convert::IntoWasmAbi for Store{

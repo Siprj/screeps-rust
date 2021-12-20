@@ -1,5 +1,5 @@
 use js_sys::JsString;
-use wasm_bindgen::JsValue;
+use wasm_bindgen::{JsCast, JsValue};
 
 pub trait ScreepsFromJsValue {
     fn from_js_value(val: JsValue) -> Self;
@@ -17,7 +17,7 @@ pub trait ScreepsToJsValue {
 
 impl ScreepsToJsValue for JsValue {
     fn to_js_value(self) -> JsValue {
-        self.into()
+        self.unchecked_into()
     }
 }
 

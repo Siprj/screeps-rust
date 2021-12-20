@@ -71,6 +71,9 @@ extern "C" {
     #[wasm_bindgen(method, js_name = findClosestByPath)]
     pub fn find_closest_objects_by_path(this: &RoomPosition, objects: FindType) -> Option<Object>;
 
+    #[wasm_bindgen(method, js_name = isNearTo)]
+    pub fn is_near_to(this: &RoomPosition, pos: RoomPosition) -> bool;
+
     // TODO:
     //  * findClosestByRange
     //  * findInRange
@@ -79,7 +82,6 @@ extern "C" {
     //  * getRangeTo
     //  * inRangeTo
     //  * isEqualTo
-    //  * isNearTo
     //  * look
     //  * lookFor
 

@@ -2,12 +2,15 @@
 extern crate wee_alloc;
 pub mod api;
 mod console;
-mod game;
 
 use api::return_code::*;
-use game::*;
-use js_sys::{Array, Object};
-use wasm_bindgen::{JsCast, JsValue};
+use api::panic_hook;
+use api::game::Game;
+
+use crate::api::array::ScreepsArray;
+use crate::api::constants::ResourceType;
+use crate::api::creep::BodyPartType;
+use crate::api::find::FindSources;
 
 // Use `wee_alloc` as the global allocator.
 #[global_allocator]
@@ -15,58 +18,63 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[no_mangle]
 pub fn main() {
-    let creep_count = Object::values(&creeps().object).length();
+    panic_hook::set_hook();
+    let creep_iter = Game::creeps().values_ref().iter();
+    let creep_count = creep_iter.len();
 
     console::log(&format!("creep count: {}", creep_count));
 
-    for v in Object::values(&spawns().object).iter() {
-        let spawn: Spawn = v.unchecked_into();
-        if spawn.spawning().is_some() {
-            console::log(&format!("spawin [{}] is busy", spawn.id()));
+    for spawn in Game::spawns().values_ref().iter() {
+        console::log(&format!("bla"));
+        let s = spawn.spawning();
+        console::log(&format!("bla44444444"));
+        if s.is_some() {
+            console::log(&format!("spawin is busy"));
+            console::log(&format!("spawin [{:?}] is busy", spawn.object_id()));
         } else {
-            let stored_energy = spawn.store().get_used_capacity(&resource_energy());
+            console::log(&format!("bla33333333"));
+            let stored_energy = spawn.store().stored();
             console::log(&format!("energy: {}", stored_energy));
             if stored_energy == 300 && creep_count < 5 {
-                let body = Array::new();
-                body.push(&JsValue::from_str("move"));
-                body.push(&JsValue::from_str("move"));
-                body.push(&JsValue::from_str("carry"));
-                body.push(&JsValue::from_str("work"));
+                let body = ScreepsArray::new();
+                body.push(BodyPartType::Move);
+                body.push(BodyPartType::Move);
+                body.push(BodyPartType::Carry);
+                body.push(BodyPartType::Work);
 
-                spawn.spawn_creep(&body, &format!("harvester-{}", Game::time()), None);
+                spawn.spawn_creep(body, &format!("harvester-{}", Game::time()));
             }
         }
     }
+    console::log(&format!("bla22222222"));
 
-    for v in Object::values(&creeps().object).iter() {
-        let creep: Creep = v.unchecked_into();
-
-        let creep_memory = creep.memory();
-        match mem::get_bool(&creep_memory, "harvesting") {
+    for creep in creep_iter {
+        let creep_memory = &creep.memory();
+        match creep_memory.get_bool("harvesting") {
             Some(true) => {
-                if creep.store().get_free_capacity(&resource_energy()) == 0 {
-                    mem::set_bool(&creep_memory, "harvesting", Some(false));
+                if creep.store().stored_by_resource(ResourceType::Energy) == 0 {
+                    creep_memory.set_bool("harvesting", Some(false));
                 }
             }
             _ => {
-                if creep.store().get_used_capacity(&resource_energy()) == 0 {
-                    mem::set_bool(&creep_memory, "harvesting", Some(true));
+                if creep.store().stored_by_resource(ResourceType::Energy) == 0 {
+                    creep_memory.set_bool("harvesting", Some(false));
                 }
             }
         }
 
-        if mem::get_bool(&creep_memory, "harvesting").unwrap() {
-            let source = &creep.room().find(FIND_SOURCES_ACTIVE).to_vec()[0];
-            if creep.pos().is_near_to(source) {
-                creep.harvest(source);
+        if creep_memory.get_bool("harvesting").unwrap() {
+            let source = creep.room().find(FindSources::SourcesActive).get(0);
+            if creep.position().is_near_to(source.position()) {
+                creep.harvest_energy(&source);
             } else {
-                creep.move_to(source);
+                creep.move_to_position(&source.position());
             }
         } else {
             if let Some(c) = creep.room().controller() {
                 let r = creep.upgrade_controller(&c);
                 if r == ReturnCode::NotInRange {
-                    creep.move_to(&c);
+                    creep.move_to_position(&c.position());
                 } else if r != ReturnCode::Ok {
                     console::log(&format!("couldn't upgrade: {:?}", r));
                 }

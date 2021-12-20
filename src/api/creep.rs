@@ -1,14 +1,20 @@
 use std::str::FromStr;
 
 use crate::api::array::ScreepsArray;
+use crate::api::memory::Memory;
+use crate::api::return_code::ReturnCode;
 use wasm_bindgen::{prelude::*, JsCast};
 
 use super::effect::Effect;
+use super::object_id::ObjectId;
 use super::room::Room;
+use super::store::Store;
 use super::{
     cast::{ScreepsFromJsValue, ScreepsToJsValue},
     room_position::RoomPosition,
 };
+use super::source::Source;
+use super::structure::controller::Controller;
 
 pub enum BodyPartType {
     Move,
@@ -122,7 +128,7 @@ extern "C" {
     pub type Creep;
 
     #[wasm_bindgen(method, getter = pos)]
-    pub fn pos(this: &Creep) -> RoomPosition;
+    pub fn position(this: &Creep) -> RoomPosition;
 
     #[wasm_bindgen(method, getter = effects)]
     pub fn effects(this: &Creep) -> ScreepsArray<Effect>;
@@ -149,7 +155,7 @@ extern "C" {
     pub fn fatigue(this: &Creep) -> u32;
 
     #[wasm_bindgen(method, getter = id)]
-    pub fn id(this: &Creep) -> String;
+    pub fn object_id(this: &Creep) -> ObjectId<Creep>;
 
     #[wasm_bindgen(method, getter = my)]
     pub fn is_my(this: &Creep) -> bool;
@@ -161,14 +167,24 @@ extern "C" {
     pub fn move_to_xy(this: &Creep, x: u8, y: u8) -> String;
 
     #[wasm_bindgen(method, js_name = moveTo)]
-    pub fn move_to_pos(this: &Creep, pos: RoomPosition) -> String;
+    pub fn move_to_position(this: &Creep, pos: &RoomPosition) -> String;
+
+    #[wasm_bindgen(method, getter = store)]
+    pub fn store(this: &Creep) -> Store;
+
+    #[wasm_bindgen(method, js_name = harvest)]
+    pub fn harvest_energy(this: &Creep, source: &Source) -> ReturnCode;
+
+    #[wasm_bindgen(method, js_name = harvest)]
+    pub fn upgrade_controller(this: &Creep, source: &Controller) -> ReturnCode;
+
+    #[wasm_bindgen(method, getter = memory)]
+    pub fn memory(this: &Creep) -> Memory;
 
     // TODO:
-    //  * memory
     //  * owner
     //  * saying
     //  * spawning
-    //  * store
     //  * ticksToLive
     //  * attack
     //  * attackController
@@ -179,7 +195,6 @@ extern "C" {
     //  * drop
     //  * generateSeafeMode
     //  * getActiveBodyparts
-    //  * harvest
     //  * heal
     //  * move
     //  * homveByPath
@@ -196,7 +211,6 @@ extern "C" {
     //  * signController
     //  * suicide
     //  * transfer
-    //  * upgradeController
     //  * withdraw
 }
 

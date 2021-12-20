@@ -1,10 +1,13 @@
-use js_sys::{JsString, Object};
+use js_sys::{Array, JsString, Object};
 use wasm_bindgen::{prelude::*, JsCast};
 
+use super::array::ScreepsArray;
 use super::cast::{ScreepsFromJsValue, ScreepsToJsValue};
 use super::room_position::RoomPosition;
 
 use super::cost_matrix::CostMatrix;
+use super::find::ToFind;
+use crate::api::structure::controller::Controller;
 
 struct RoomName {
     name: JsString,
@@ -92,19 +95,25 @@ extern "C" {
     pub type Room;
 
     #[wasm_bindgen(method, getter = energyAvailable)]
-    fn energy_avalilable(this: &Room) -> u32;
+    pub fn energy_avalilable(this: &Room) -> u32;
 
     #[wasm_bindgen(method, getter = energyCapacityAvailabl)]
-    fn energy_capacity(this: &Room) -> u32;
+    pub fn energy_capacity(this: &Room) -> u32;
 
     #[wasm_bindgen(method, js_name = findPath)]
-    fn find_path(this: &Room, from: &RoomPosition, to: &RoomPosition) -> u32;
+    pub fn find_path(this: &Room, from: &RoomPosition, to: &RoomPosition) -> u32;
 
     #[wasm_bindgen(method, js_name = findPath)]
-    fn find_path_opt(this: &Room, from: &RoomPosition, to: &RoomPosition, options: FindOptions) -> u32;
+    pub fn find_path_opt(this: &Room, from: &RoomPosition, to: &RoomPosition, options: FindOptions) -> u32;
+
+    #[wasm_bindgen(method, js_name = find)]
+    fn find_internal(this: &Room, find_constant: u8) -> Array;
+
+    #[wasm_bindgen(method, getter = controller)]
+    pub fn controller(this: &Room) -> Option<Controller>;
 
     // TODO:
-    //  * controller
+    //  *
     //  * memory
     //  * name
     //  * storage
@@ -113,7 +122,6 @@ extern "C" {
     //  * serializePath
     //  * createConstructionSite
     //  * createFlag
-    //  * find
     //  * findExitTo
     //  * getEventLog
     //  * getPositionAt
@@ -124,10 +132,17 @@ extern "C" {
     //  * lookForAtArea
 }
 
+impl Room {
+    pub fn find<V>(self, find_type: V) -> ScreepsArray<V::OutputType> where V: ToFind {
+        ScreepsArray::from_array(self.find_internal(find_type.to_find()))
+    }
+}
+
 impl ScreepsFromJsValue for Room {
     fn from_js_value(val: JsValue) -> Self {
         val.unchecked_into()
     }
+
 }
 
 impl ScreepsToJsValue for Room {

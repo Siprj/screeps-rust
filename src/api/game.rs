@@ -7,9 +7,11 @@ use wasm_bindgen::prelude::*;
 extern "C" {
     pub type Game;
     #[wasm_bindgen(static_method_of = Game, getter = creeps)]
-    fn creeps() -> ScreepsMap<String, Creep>;
+    pub fn creeps() -> ScreepsMap<String, Creep>;
+
     #[wasm_bindgen(static_method_of = Game, getter = spawns)]
-    fn spawns() -> ScreepsMap<String, Spawn>;
+    pub fn spawns() -> ScreepsMap<String, Spawn>;
+
     #[wasm_bindgen(static_method_of = Game, getter = time)]
     pub fn time() -> u32;
 

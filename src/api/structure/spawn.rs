@@ -3,8 +3,37 @@ use super::super::store::Store;
 use crate::api::cast::{ScreepsFromJsValue, ScreepsToJsValue};
 use crate::api::creep::BodyPartType;
 use crate::api::effect::Effect;
+use crate::api::object_id::ObjectId;
+use crate::api::return_code::ReturnCode;
 use crate::api::{array::ScreepsArray, room_position::RoomPosition};
+use js_sys::JsString;
 use wasm_bindgen::{prelude::*, JsCast};
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = StructureSpawn)]
+    pub type Spawning;
+
+    #[wasm_bindgen(method, getter)]
+    pub fn name(this: &Spawning) -> JsString;
+
+    #[wasm_bindgen(method, getter = needTime)]
+    pub fn need_time(this: &Spawning) -> u32;
+
+    #[wasm_bindgen(method, getter = remainingTime)]
+    pub fn remaining_time(this: &Spawning) -> u32;
+
+    #[wasm_bindgen(method, getter)]
+    pub fn spawn(this: &Spawning) -> Spawn;
+
+    #[wasm_bindgen(method)]
+    pub fn cancel(this: &Spawning) -> ReturnCode;
+
+    // TODO:
+    //  * setDirections
+    //  * directions
+}
+
 
 #[wasm_bindgen]
 extern "C" {
@@ -12,7 +41,7 @@ extern "C" {
     pub type Spawn;
 
     #[wasm_bindgen(method, getter = pos)]
-    pub fn pos(this: &Spawn) -> RoomPosition;
+    pub fn position(this: &Spawn) -> RoomPosition;
 
     #[wasm_bindgen(method, getter = effects)]
     pub fn effects(this: &Spawn) -> ScreepsArray<Effect>;
@@ -27,7 +56,7 @@ extern "C" {
     pub fn hitpoints_maxiumu(this: &Spawn) -> u32;
 
     #[wasm_bindgen(method, getter = id)]
-    pub fn id(this: &Spawn) -> String;
+    pub fn object_id(this: &Spawn) -> ObjectId<Spawn>;
 
     #[wasm_bindgen(method, getter = name)]
     pub fn name(this: &Spawn) -> String;
@@ -41,6 +70,9 @@ extern "C" {
     #[wasm_bindgen(method, js_name = spawnCreep)]
     pub fn spawn_creep(this: &Spawn, body: ScreepsArray<BodyPartType>, name: &str) -> Store;
 
+    #[wasm_bindgen(method, js_name = spawning)]
+    pub fn spawning(this: &Spawn) -> Option<Spawning>;
+
     // TODO:
     //  * structureType
     //  * destroy
@@ -48,7 +80,6 @@ extern "C" {
     //  * notifyWhenAttacked
     //  * owner
     //  * memory
-    //  * spawning
     //  * store
     //  * recycleCreep
     //  * renewCreep

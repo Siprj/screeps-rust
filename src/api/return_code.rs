@@ -43,7 +43,9 @@ impl wasm_bindgen::convert::FromWasmAbi for ReturnCode {
 
     #[inline]
     unsafe fn from_abi(js: i32) -> Self {
-        Self::from_i32(js).unwrap()
+        // Ugly hack to fix the value being grater than zero in the web simulation.
+        // I can't really find where the issue is...
+        Self::from_i32(if js > 0 { 0} else { js}).expect(format!("blabla {:?}", js).as_str())
     }
 }
 

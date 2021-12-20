@@ -1,3 +1,4 @@
+
 /// Representation of effects. Not sure what they are...
 /// TODO: Find out what these values can be.
 pub struct EffectOrPowerId(u32);
